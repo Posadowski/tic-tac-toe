@@ -11,7 +11,7 @@ void drawBoard(sf::RenderWindow& window, std::vector<std::vector<char>>& board,s
             cell.setFillColor(sf::Color::White);
             window.draw(cell);
 
-            if (board[j][i] != '_') {
+            if (board[j][i] != UNCHECKED_BOX) {
                 sf::Text text(std::string(1, board[j][i]), font, 100);
                 text.setFillColor(sf::Color::Black);
                 text.setPosition(i * CELL_SIZE + 50, j * CELL_SIZE + 30);
@@ -54,27 +54,40 @@ bool userSelectedRowOrColumnCorrectly(char userInput)
     return false;
 }
 
-bool checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer){
+possible_match_results checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer){
     
     // are O's or X's 3 in te same col?   
     for (int row = 0; row < ROWS; ++row)
     {
         if(currentBoard[row][0] == currentPlayer && currentBoard[row][1] == currentPlayer && currentBoard[row][2] == currentPlayer){
-          return true;
+          return MATCH_RESULT_WIN;
         }
     }
     // are O's or X's 3 in te same row?   
     for (int col = 0; col < COLUMNS; ++col)
     {
         if(currentBoard[0][col] == currentPlayer && currentBoard[1][col] == currentPlayer && currentBoard[2][col] == currentPlayer){
-          return true;
+          return MATCH_RESULT_WIN;
         }
     }
-
+    // are O's or X's  3 diagonally
     if((currentBoard[0][0] == currentPlayer && currentBoard[1][1] == currentPlayer && currentBoard[2][2] == currentPlayer) || 
            (currentBoard[0][2] == currentPlayer && currentBoard[1][1] == currentPlayer && currentBoard[2][0] == currentPlayer)){
-          return true;
+          return MATCH_RESULT_WIN;
     }
 
-    return false;
+    // Check if all boxes have been filled without selecting a winner
+    int checkedBoxs = 0;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if(currentBoard[i][j] != UNCHECKED_BOX){
+                checkedBoxs++;
+            }
+        }
+    }
+    if(checkedBoxs >= COLUMNS * ROWS){
+        return MATCH_RESULT_DRAW;
+    }
+
+    return MATCH_RESULT_UNKNOWN;
 }

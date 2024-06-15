@@ -13,9 +13,18 @@
 #define CELL_SIZE 200
 #define PADDING 5
 
+#define UNCHECKED_BOX '_'
+
+enum possible_match_results{
+    MATCH_RESULT_UNKNOWN = 0,
+    MATCH_RESULT_WIN = 1,
+    MATCH_RESULT_DRAW = 2,
+    MATCH_RESULT_MAX
+};
+
 void drawBoard(sf::RenderWindow& window, std::vector<std::vector<char>>& board,sf::Font& font);
 bool userSelectedTeamCorrectly(char *userInput);
 bool userSelectedRowOrColumnCorrectly(char userInput);
-bool checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer);
+possible_match_results checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer);
 
 #endif // _GAME_MACHINERY_H
