@@ -44,7 +44,7 @@ test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 # Build the test executable
 $(TEST_TARGET): $(OBJDIR) $(BINDIR) $(OBJFILES) test.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJFILES) test.cpp  $(LDFLAGS) -lgtest -lgtest_main -pthread
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJFILES) test.cpp  $(LDFLAGS) $(SFMLFLAGS) -lgtest -lgtest_main -pthread
 
 
 # Clean up generated files
