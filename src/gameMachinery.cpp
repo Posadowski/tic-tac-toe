@@ -1,22 +1,22 @@
 
 #include "gameMachinery.h"
 
-void drawMap(const std::vector<std::vector<char>> &currentBoard)
-{
-    for (int row = 0; row < ROWS; ++row)
-    {
-        for (int col = 0; col < COLUMNS; ++col)
-        {
-            std::cout << " " << currentBoard[row][col] << " ";
-            if (col < COLUMNS - 1)
-            {
-                std::cout << "|";
+void drawBoard(sf::RenderWindow& window, std::vector<std::vector<char>>& board,sf::Font& font) {
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 2 * PADDING, CELL_SIZE - 2 * PADDING));
+            cell.setPosition(i * CELL_SIZE + PADDING, j * CELL_SIZE + PADDING);
+            cell.setOutlineThickness(PADDING);
+            cell.setOutlineColor(sf::Color::Black);
+            cell.setFillColor(sf::Color::White);
+            window.draw(cell);
+
+            if (board[j][i] != '_') {
+                sf::Text text(std::string(1, board[j][i]), font, 100);
+                text.setFillColor(sf::Color::Black);
+                text.setPosition(i * CELL_SIZE + 50, j * CELL_SIZE + 30);
+                window.draw(text);
             }
-        }
-        std::cout << std::endl;
-        if (row < ROWS - 1)
-        {
-            std::cout << "-----------" << std::endl;
         }
     }
 }

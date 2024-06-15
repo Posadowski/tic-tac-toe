@@ -1,73 +1,50 @@
 #include <iostream>
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 #include "banner.h"
 #include "gameMachinery.h"
 
+
 int main()
 {
-    displayTicTacToe();
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tic Tac Toe");
+
+    sf::Font font;
+    if (!font.loadFromFile("fonts/arial.ttf")) {
+        std::cerr << "Failed to load font" << std::endl;
+        return -1;
+    }
+
     std::vector<std::vector<char>> board(3, std::vector<char>(3, '_'));
-
-    std::cout << "Enter whether you choose O or X ?" << std::endl;
-    char selectedTeam;
-    std::cin >> selectedTeam;
-
-    while (!userSelectedTeamCorrectly(&selectedTeam))
-    {
-        std::cin >> selectedTeam;
-    }
-
-    displayRules();
-
-    std::cout << selectedTeam << " is selected" << std::endl;
-
+    char selectedTeam = 'X';
     bool gameFinished = false;
-    char selectedRow, selectedCol;
-    while (!gameFinished)
+
+    while (window.isOpen())
     {
-        drawMap(board);
-
-        std::cout << "Choose column" << std::endl;
-        std::cin >> selectedCol;
-        while (!userSelectedRowOrColumnCorrectly(selectedCol))
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            std::cin >> selectedCol;
-        }
-        std::cout << "Choose row" << std::endl;
-        std::cin >> selectedRow;
-        while (!userSelectedRowOrColumnCorrectly(selectedRow))
-        {
-            std::cin >> selectedRow;
-        }
-        // Adjust for 0-based indexing
-        int selectedColInt = selectedCol - '1'; // 1 in ASCII is 49 so in exaple char '9' - '1' = 8 
-        int selectedRowInt = selectedRow -'1';
+            if (event.type == sf::Event::Closed)
+                window.close();
 
-        // Check if indices are within bounds
-        if (selectedRowInt >= 0 && selectedRowInt < ROWS && selectedColInt >= 0 && selectedColInt < COLUMNS) {
-            // Check if the cell is empty
-            if (board[selectedRowInt][selectedColInt] == '_') {
-                board[selectedRowInt][selectedColInt] = selectedTeam;
-            } else {
-                std::cout << "The cell is already occupied. Please choose another cell." << std::endl;
-                continue; // Skip the rest of the loop and prompt the user again
+            if (event.type == sf::Event::MouseButtonPressed && !gameFinished) {
+                int row = event.mouseButton.y / CELL_SIZE;
+                int col = event.mouseButton.x / CELL_SIZE;
+                if (row < 3 && col < 3 && board[row][col] == '_') {
+                    board[row][col] = selectedTeam;
+                    selectedTeam = (selectedTeam == 'X') ? 'O' : 'X';
+                    gameFinished = checkIfGameFinished(board, selectedTeam);
+                    if (gameFinished) {
+                        std::cout << "Congratulations! " << selectedTeam << " wins" << std::endl;
+                        window.close();
+                    }
+                }
             }
-        } else {
-            std::cout << "Selected row or column is out of bounds." << std::endl;
-            continue; // Skip the rest of the loop and prompt the user again
         }
 
-        // Optionally switch player team for next move
-        gameFinished = checkIfGameFinished(board,selectedTeam);
-        if(gameFinished){
-            std::cout << std::endl;
-            std::cout << std::endl;
-            std::cout << "Cogratulations! " << selectedTeam << " wins" << std::endl;
-            std::cout << " Game Finished " << std::endl;
-        }
-        selectedTeam = (selectedTeam == 'X') ? 'O' : 'X';
+        window.clear(sf::Color::White);
+        drawBoard(window, board, font);
+        window.display();
     }
-    drawMap(board);
-    return 0;
 }
