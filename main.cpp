@@ -63,6 +63,7 @@ int main()
         if(gameFinished){
             std::cout << std::endl;
             std::cout << std::endl;
+            std::cout << "Cogratulations! " << selectedTeam << " wins" << std::endl;
             std::cout << " Game Finished " << std::endl;
         }
         selectedTeam = (selectedTeam == 'X') ? 'O' : 'X';
