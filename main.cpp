@@ -44,7 +44,7 @@ int main()
     // Initial game board
     std::vector<std::vector<char>> board(3, std::vector<char>(3, UNCHECKED_BOX));
     char selectedTeam = 'X';
-    possible_match_results gameFinished = MATCH_RESULT_UNKNOWN;
+    possible_match_results gameResult = MATCH_RESULT_UNKNOWN;
 
     while (window.isOpen())
     {
@@ -63,7 +63,7 @@ int main()
                 }
             }
 
-            if (event.type == sf::Event::MouseButtonPressed && gameStarted && gameFinished == MATCH_RESULT_UNKNOWN) {
+            if (event.type == sf::Event::MouseButtonPressed && gameStarted && gameResult == MATCH_RESULT_UNKNOWN) {
                 if (startButtonClicked) {
                     // Ignore the first mouse press after clicking "Start Game"
                     startButtonClicked = false;
@@ -73,12 +73,7 @@ int main()
                     if (row < 3 && col < 3 && board[row][col] == '_') {
                         board[row][col] = selectedTeam;
                         selectedTeam = (selectedTeam == 'X') ? 'O' : 'X';
-                        gameFinished = checkIfGameFinished(board, selectedTeam);
-                        if (gameFinished == MATCH_RESULT_WIN) {
-                            std::cout << "Congratulations! " << selectedTeam << " wins" << std::endl;
-                        } else if(gameFinished == MATCH_RESULT_DRAW){
-                            std::cout << "There are no more possible moves. DRAW" << std::endl;
-                        }
+                        gameResult = checkIfGameFinished(board, selectedTeam);
                     }
                 }
             }
@@ -90,7 +85,11 @@ int main()
             window.draw(logoSprite);
             window.draw(startText);
         } else {
-            drawBoard(window, board, font);
+            if(gameResult == MATCH_RESULT_UNKNOWN){
+                drawBoard(window, board, font);
+            } else {
+                drawResult(window,font,selectedTeam,gameResult);
+            }
         }
 
         window.display();

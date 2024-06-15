@@ -23,6 +23,7 @@ enum possible_match_results{
 };
 
 void drawBoard(sf::RenderWindow& window, std::vector<std::vector<char>>& board,sf::Font& font);
+void drawResult(sf::RenderWindow& window,sf::Font& font, char currentPlayer,possible_match_results gameResult);
 bool userSelectedTeamCorrectly(char *userInput);
 bool userSelectedRowOrColumnCorrectly(char userInput);
 possible_match_results checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer);

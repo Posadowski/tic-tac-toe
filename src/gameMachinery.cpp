@@ -21,6 +21,30 @@ void drawBoard(sf::RenderWindow& window, std::vector<std::vector<char>>& board,s
     }
 }
 
+void drawResult(sf::RenderWindow& window,sf::Font& font, char currentPlayer,possible_match_results gameResult){
+    std::string windowString;
+    switch (gameResult){
+        case MATCH_RESULT_WIN:
+            windowString = "Congratulations! WIN: " + std::string(1, currentPlayer);;
+
+            break;
+        case MATCH_RESULT_DRAW:
+            windowString = "DRAW";
+            break;
+        default:
+            std::cerr << "Unexpected match result " << std::endl;
+            break;       
+    }
+    
+    sf::Text windowText(windowString, font, 50);
+    windowText.setFillColor(sf::Color::Black);
+    // Center the text
+    sf::FloatRect textRect = windowText.getLocalBounds();
+    windowText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    windowText.setPosition(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f);
+    window.draw(windowText);
+}
+
 bool userSelectedTeamCorrectly(char *userInput)
 {
     switch (*userInput){
