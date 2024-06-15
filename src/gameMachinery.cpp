@@ -1,6 +1,27 @@
 
 #include "gameMachinery.h"
 
+[[deprecated]]
+void drawMap(const std::vector<std::vector<char>> &currentBoard)
+{
+    for (int row = 0; row < ROWS; ++row)
+    {
+        for (int col = 0; col < COLUMNS; ++col)
+        {
+            std::cout << " " << currentBoard[row][col] << " ";
+            if (col < COLUMNS - 1)
+            {
+                std::cout << "|";
+            }
+        }
+        std::cout << std::endl;
+        if (row < ROWS - 1)
+        {
+            std::cout << "-----------" << std::endl;
+        }
+    }
+}
+
 void drawBoard(sf::RenderWindow& window, std::vector<std::vector<char>>& board,sf::Font& font) {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
@@ -79,6 +100,17 @@ bool userSelectedRowOrColumnCorrectly(char userInput)
 }
 
 possible_match_results checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer){
+
+    // check if in vector are correct values
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            if(currentBoard[i][j] != UNCHECKED_BOX && currentBoard[i][j] != 'O' && currentBoard[i][j] != 'X'){  
+               std::cerr << "Incorrect values in board vector " << currentBoard[i][j] << std::endl;
+               return MATCH_RESULT_IMPOSSIBLE;
+            }
+        }
+    }
+
     
     // are O's or X's 3 in te same col?   
     for (int row = 0; row < ROWS; ++row)
