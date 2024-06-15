@@ -1,0 +1,29 @@
+name: C++ CI
+
+on:
+  push:
+    branches:
+      - main  # trigger on push to main branch
+  pull_request:
+    branches:
+      - main  # trigger on pull requests to main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2  # Checkout the repository content to the runner
+
+    - name: Install g++
+      run: sudo apt-get install g++
+
+    - name: Build
+      run: |
+        mkdir -p bin  # Create bin directory if it does not exist
+        g++ -Wall -Wextra -std=c++11 -Iinc -o bin/tic-tac-toe src/*.cpp main.cpp
+
+    - name: Test
+      run: |
+        g++ -Wall -Wextra -std=c++11 -Iinc -o bin/test src/*.cpp test.cpp -lgtest -lgtest_main -pthread
+        ./bin/test  # Execute the tests
