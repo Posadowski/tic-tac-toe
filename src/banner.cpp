@@ -2,7 +2,6 @@
 
 void adjustStringRowsToCurrentWindowSize(sf::RenderWindow& window, std::string &text, int fontSize){
   //Read string line by line and compare with current window size
-  std::cout << window.getSize().x/(fontSize/2) <<std::endl;
   long unsigned int counter = 0;
   for(long unsigned int i = 0; i<text.length(); i++){
     if(text.at(i) != '\n'){
@@ -39,7 +38,6 @@ void displayRules(sf::RenderWindow& window, sf::Font& font) {
         adjustStringRowsToCurrentWindowSize(window,rules,15);
         sf::Text rulesText(rules, font, 15);
         rulesText.setFillColor(sf::Color::Black);
-        sf::FloatRect textRect = rulesText.getLocalBounds();
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close(); // Close the window properly
