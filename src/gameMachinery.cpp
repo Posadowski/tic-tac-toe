@@ -100,7 +100,6 @@ bool userSelectedTeamCorrectly(char *userInput)
             return true;
             break;
         default:
-            std::cout << "[ERROR] Entered value is incorrect" << std::endl;
             std::cout << "Choose X or O" << std::endl;           
             return false;
     }
