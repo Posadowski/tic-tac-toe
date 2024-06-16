@@ -2,19 +2,23 @@
 
 void adjustStringRowsToCurrentWindowSize(sf::RenderWindow& window, std::string &text, int fontSize){
   //Read string line by line and compare with current window size
+  std::string adjustedText;
   long unsigned int counter = 0;
   for(long unsigned int i = 0; i<text.length(); i++){
-    if(text.at(i) != '\n'){
+    adjustedText += text[i];
+    if(text[i] != '\n'){
       counter++;
-    } else if (text.at(i) == '\n'){
+    } else {
       counter = 0; 
     } 
-    if(counter >= (window.getSize().x/(fontSize/2))){
+    if(counter >= (window.getSize().x / (fontSize / 2))){
       counter = 0;
-      text = text.substr(0, i) + "\n      " + text.substr(i);
+      adjustedText += "\n      ";
     } 
   }
+  text = adjustedText;
 }
+
 
 void displayRules(sf::RenderWindow& window, sf::Font& font) {
     bool firstClickOccured = false;

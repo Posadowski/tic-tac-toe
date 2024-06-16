@@ -154,7 +154,7 @@ TEST_F(AdjustStringRowsTest, AdjustsStringCorrectly) {
     adjustStringRowsToCurrentWindowSize(window, text,15);
 
     // Expected result (for example, splitting the string into multiple lines)
-    std::string expected = "It is a really, really very long string that needs to be adjusted to the width of the window exactly at that  poi\n      nt .";
+    std::string expected = "It is a really, really very long string that needs to be adjusted to the width of the window exactly at that  poin\n      t .";
 
     EXPECT_EQ(text, expected);
 }
