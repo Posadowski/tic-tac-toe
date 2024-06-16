@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    - run: npm ci
+    - run: npm test
+
     - uses: actions/checkout@v2  # Checkout the repository content to the runner
     
     - name: Clear GitHub Actions cache
@@ -34,7 +40,4 @@ jobs:
     - name: Build
       run: |
         make
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '20'  
 
