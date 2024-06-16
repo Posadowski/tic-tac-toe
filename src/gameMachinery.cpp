@@ -62,7 +62,7 @@ void drawResult(sf::RenderWindow& window,sf::Font& font, char currentPlayer,poss
     // Center the text
     sf::FloatRect textRect = windowText.getLocalBounds();
     windowText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
-    windowText.setPosition(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f);
+    windowText.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
     window.draw(windowText);
 }
 

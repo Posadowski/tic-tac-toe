@@ -63,6 +63,19 @@ int main()
                 }
             }
 
+            if (event.type == sf::Event::Resized) {
+                // Update the view to the new size of the window
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+
+                // Rescale logo
+                logoSprite.setScale(event.size.width / float(logoTexture.getSize().x), (event.size.height / 2) / float(logoTexture.getSize().y));
+                logoSprite.setPosition(0, 0);
+
+                // Reposition "Start Game" text
+                startText.setPosition((event.size.width - startText.getLocalBounds().width) / 2, event.size.height - 200);
+            }
+
             if (event.type == sf::Event::MouseButtonPressed && gameStarted && gameResult == MATCH_RESULT_UNKNOWN) {
                 if (startButtonClicked) {
                     // Ignore the first mouse press after clicking "Start Game"
