@@ -13,18 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-
     - uses: actions/checkout@v2  # Checkout the repository content to the runner
-    
-    - name: Clear GitHub Actions cache
-      run: |
-        npm cache clean --force
-        yarn cache clean
-        rm -rf ~/.npm
-        rm -rf ~/.yarn
 
     - name: Install g++
       run: |
@@ -38,4 +27,5 @@ jobs:
     - name: Build
       run: |
         make
+
 
