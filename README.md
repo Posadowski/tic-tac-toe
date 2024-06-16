@@ -2,6 +2,15 @@
 ## Overview
 This project implements a console-based Tic-Tac-Toe game in C++. The game allows two players to take turns marking spaces on a 3x3 grid until one player wins by getting three of their marks in a row, column, or diagonal, or the game ends in a draw if the grid is full with no winner.
 
+## Prerequisites
+
+1. Computer with Linux installed (tested on Debian)
+2. Necessary packages installed
+```
+sudo apt-get install g++ libgtest-dev libsfml-dev
+```
+
+
 ## Key Features
 1. Game Mechanics: Players alternate turns, marking 'X' or 'O' on the board.
 2. Board Visualization: The current state of the board is displayed after each move, showing positions and moves made.

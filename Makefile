@@ -2,13 +2,16 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -Wall -Wextra -std=c++11 -Iinc
+CXXFLAGS = -Wall -Wextra -std=c++11 -Iinc -I/usr/include/SFML
+LDFLAGS = -L/usr/lib
+SFMLFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 # Directories
 SRCDIR = src
 INCDIR = inc
 OBJDIR = obj
 BINDIR = bin
+
 # Source files
 SRCFILES = $(wildcard $(SRCDIR)/*.cpp)
 OBJFILES = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCFILES))
@@ -29,7 +32,7 @@ $(BINDIR):
 
 # Build the target executable
 $(TARGET): $(OBJDIR) $(BINDIR) $(OBJFILES) main.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJFILES) main.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJFILES) main.cpp $(LDFLAGS) $(SFMLFLAGS)
 
 # Compile source files to object files
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(INCDIR)/%.h
@@ -41,7 +44,7 @@ test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 # Build the test executable
 $(TEST_TARGET): $(OBJDIR) $(BINDIR) $(OBJFILES) test.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $(OBJFILES) test.cpp -lgtest -lgtest_main -pthread
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJFILES) test.cpp  $(LDFLAGS) $(SFMLFLAGS) -lgtest -lgtest_main -pthread
 
 
 # Clean up generated files

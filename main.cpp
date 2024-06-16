@@ -1,73 +1,99 @@
 #include <iostream>
 #include <vector>
+#include <SFML/Graphics.hpp>
 
 #include "banner.h"
 #include "gameMachinery.h"
 
+
 int main()
 {
-    displayTicTacToe();
-    std::vector<std::vector<char>> board(3, std::vector<char>(3, '_'));
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tic Tac Toe");
 
-    std::cout << "Enter whether you choose O or X ?" << std::endl;
-    char selectedTeam;
-    std::cin >> selectedTeam;
-
-    while (!userSelectedTeamCorrectly(&selectedTeam))
-    {
-        std::cin >> selectedTeam;
+    // Load the font
+    sf::Font font;
+    if (!font.loadFromFile("fonts/arial.ttf")) {
+        std::cerr << "Failed to load font" << std::endl;
+        return -1;
     }
 
-    displayRules();
+    // Load the logo image
+    sf::Texture logoTexture;
+    if (!logoTexture.loadFromFile("img/logo.jpg")) {
+        std::cerr << "Failed to load logo image" << std::endl;
+        return -1;
+    }
 
-    std::cout << selectedTeam << " is selected" << std::endl;
+    // Create a sprite for the logo
+    sf::Sprite logoSprite;
+    logoSprite.setTexture(logoTexture);
 
-    bool gameFinished = false;
-    char selectedRow, selectedCol;
-    while (!gameFinished)
+    // Adjust the size and position of the logo if necessary
+    sf::Vector2u textureSize = logoTexture.getSize();
+    logoSprite.setScale(WINDOW_WIDTH / float(textureSize.x), (WINDOW_HEIGHT / 2) / float(textureSize.y));
+    logoSprite.setPosition(0, 0); // Center the logo at the top of the window
+
+    // Create "Start Game" text
+    sf::Text startText("Start Game", font, 50);
+    startText.setFillColor(sf::Color::Black);
+    startText.setPosition((WINDOW_WIDTH - startText.getLocalBounds().width) / 2, 400);
+
+    bool gameStarted = false;
+    bool startButtonClicked = false; // New state to handle the start button click
+
+    // Initial game board
+    std::vector<std::vector<char>> board(3, std::vector<char>(3, UNCHECKED_BOX));
+    char selectedTeam = 'X';
+    possible_match_results gameResult = MATCH_RESULT_UNKNOWN;
+
+    while (window.isOpen())
     {
-        drawMap(board);
-
-        std::cout << "Choose column" << std::endl;
-        std::cin >> selectedCol;
-        while (!userSelectedRowOrColumnCorrectly(selectedCol))
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            std::cin >> selectedCol;
-        }
-        std::cout << "Choose row" << std::endl;
-        std::cin >> selectedRow;
-        while (!userSelectedRowOrColumnCorrectly(selectedRow))
-        {
-            std::cin >> selectedRow;
-        }
-        // Adjust for 0-based indexing
-        int selectedColInt = selectedCol - '1'; // 1 in ASCII is 49 so in exaple char '9' - '1' = 8 
-        int selectedRowInt = selectedRow -'1';
+            if (event.type == sf::Event::Closed)
+                window.close();
 
-        // Check if indices are within bounds
-        if (selectedRowInt >= 0 && selectedRowInt < ROWS && selectedColInt >= 0 && selectedColInt < COLUMNS) {
-            // Check if the cell is empty
-            if (board[selectedRowInt][selectedColInt] == '_') {
-                board[selectedRowInt][selectedColInt] = selectedTeam;
-            } else {
-                std::cout << "The cell is already occupied. Please choose another cell." << std::endl;
-                continue; // Skip the rest of the loop and prompt the user again
+            if (event.type == sf::Event::MouseButtonPressed && !gameStarted) {
+                // Check if the "Start Game" text is clicked
+                sf::FloatRect bounds = startText.getGlobalBounds();
+                if (bounds.contains(event.mouseButton.x, event.mouseButton.y)) {
+                    gameStarted = true;
+                    startButtonClicked = true; // Set the flag to ignore the first mouse press after starting the game
+                }
             }
-        } else {
-            std::cout << "Selected row or column is out of bounds." << std::endl;
-            continue; // Skip the rest of the loop and prompt the user again
+
+            if (event.type == sf::Event::MouseButtonPressed && gameStarted && gameResult == MATCH_RESULT_UNKNOWN) {
+                if (startButtonClicked) {
+                    // Ignore the first mouse press after clicking "Start Game"
+                    startButtonClicked = false;
+                } else {
+                    int row = event.mouseButton.y / CELL_SIZE;
+                    int col = event.mouseButton.x / CELL_SIZE;
+                    if (row < 3 && col < 3 && board[row][col] == '_') {
+                        board[row][col] = selectedTeam;
+                        selectedTeam = (selectedTeam == 'X') ? 'O' : 'X';
+                        gameResult = checkIfGameFinished(board, selectedTeam);
+                    }
+                }
+            }
         }
 
-        // Optionally switch player team for next move
-        gameFinished = checkIfGameFinished(board,selectedTeam);
-        if(gameFinished){
-            std::cout << std::endl;
-            std::cout << std::endl;
-            std::cout << "Cogratulations! " << selectedTeam << " wins" << std::endl;
-            std::cout << " Game Finished " << std::endl;
+        window.clear(sf::Color::White);
+        
+        if (!gameStarted) {
+            window.draw(logoSprite);
+            window.draw(startText);
+        } else {
+            if(gameResult == MATCH_RESULT_UNKNOWN){
+                drawBoard(window, board, font);
+            } else {
+                drawResult(window,font,selectedTeam,gameResult);
+            }
         }
-        selectedTeam = (selectedTeam == 'X') ? 'O' : 'X';
+
+        window.display();
     }
-    drawMap(board);
+
     return 0;
 }

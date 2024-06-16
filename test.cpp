@@ -3,11 +3,6 @@
 
 #include "gameMachinery.h"
 
-extern void drawMap(const std::vector<std::vector<char>> &currentBoard);
-extern bool userSelectedTeamCorrectly(char *userInput);
-extern bool userSelectedRowOrColumnCorrectly(char userInput);
-extern bool checkIfGameFinished(const std::vector<std::vector<char>> &currentBoard, char currentPlayer);
-
 TEST(DrawMapTest, CorrectOutput) {
     std::vector<std::vector<char>> board = {
         {'X', 'O', 'X'},
@@ -70,45 +65,75 @@ TEST(UserSelectedRowOrColumnCorrectlyTest, InvalidInput) {
     ASSERT_FALSE(userSelectedRowOrColumnCorrectly('a'));
 }
 
-TEST(CheckIfGameFinishedTest, GameNotFinished) {
+TEST(CheckIfGameFinishedTest, GameDRAW) {
     std::vector<std::vector<char>> board = {
         {'X', 'O', 'X'},
         {'O', 'X', 'O'},
         {'O', 'X', 'O'}
     };
-    ASSERT_FALSE(checkIfGameFinished(board, 'X'));
-    ASSERT_FALSE(checkIfGameFinished(board, 'O'));
+    EXPECT_EQ(MATCH_RESULT_DRAW,checkIfGameFinished(board, 'X'));
+    EXPECT_EQ(MATCH_RESULT_DRAW,checkIfGameFinished(board, 'O'));
 }
 
-TEST(CheckIfGameFinishedTest, GameFinished) {
+TEST(CheckIfGameFinishedTest, HorizontalWinTest){
     std::vector<std::vector<char>> board = {
         {'X', 'X', 'X'},
-        {'O', 'X', 'O'},
-        {'O', 'O', 'X'}
+        {'_', '_', '_'},
+        {'_', '_', '_'}
     };
-    ASSERT_TRUE(checkIfGameFinished(board, 'X'));
-
-    board = {
-        {'X', 'O', 'X'},
-        {'X', 'O', 'O'},
-        {'X', 'O', 'X'}
-    };
-    ASSERT_TRUE(checkIfGameFinished(board, 'X'));
-
-    board = {
-        {'X', 'O', 'O'},
-        {'O', 'X', 'O'},
-        {'O', 'O', 'X'}
-    };
-    ASSERT_TRUE(checkIfGameFinished(board, 'X'));
-
-    board = {
-        {'O', 'O', 'X'},
-        {'X', 'O', 'X'},
-        {'X', 'X', 'O'}
-    };
-    ASSERT_TRUE(checkIfGameFinished(board, 'O'));
+    
+    EXPECT_EQ(MATCH_RESULT_WIN,checkIfGameFinished(board, 'X'));
+    
 }
+
+TEST(CheckIfGameFinishedTest, VerticalWinTest) {
+    std::vector<std::vector<char>> board = {
+        {'O', '_', '_'},
+        {'O', '_', '_'},
+        {'O', '_', '_'}
+    };
+    EXPECT_EQ(MATCH_RESULT_WIN, checkIfGameFinished(board, 'O'));
+}
+
+TEST(CheckIfGameFinishedTest, DiagonalWinTest1) {
+    std::vector<std::vector<char>> board = {
+        {'X', '_', '_'},
+        {'_', 'X', '_'},
+        {'_', '_', 'X'}
+    };
+    EXPECT_EQ(MATCH_RESULT_WIN, checkIfGameFinished(board, 'X'));
+}
+
+TEST(CheckIfGameFinishedTest, DiagonalWinTest2) {
+    std::vector<std::vector<char>> board = {
+        {'_', '_', 'O'},
+        {'_', 'O', '_'},
+        {'O', '_', '_'}
+    };
+    EXPECT_EQ(MATCH_RESULT_WIN, checkIfGameFinished(board, 'O'));
+}
+
+// Test for unknown result (game not finished)
+TEST(CheckIfGameFinishedTest, GameNotFinishedTest) {
+    std::vector<std::vector<char>> board = {
+        {'X', '_', '_'},
+        {'_', 'O', '_'},
+        {'_', '_', '_'}
+    };
+    EXPECT_EQ(MATCH_RESULT_UNKNOWN, checkIfGameFinished(board, 'X'));
+    EXPECT_EQ(MATCH_RESULT_UNKNOWN, checkIfGameFinished(board, 'O'));
+}
+
+TEST(CheckIfGameFinishedTest, IncorrectBoardValuesTest) {
+    std::vector<std::vector<char>> board = {
+        {'X', 'p', '_'},
+        {'_', 'O', 'p'},
+        {'_', '_', '_'}
+    };
+    EXPECT_EQ(MATCH_RESULT_IMPOSSIBLE, checkIfGameFinished(board, 'X'));
+    EXPECT_EQ(MATCH_RESULT_IMPOSSIBLE, checkIfGameFinished(board, 'O'));
+}
+
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
