@@ -22,11 +22,6 @@ jobs:
         rm -rf ~/.npm
         rm -rf ~/.yarn
 
-    - name: Set up Node.js 20.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
-
     - name: Install g++
       run: |
         sudo apt-get update  
@@ -39,5 +34,7 @@ jobs:
     - name: Build
       run: |
         make
-
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '20'  
 
