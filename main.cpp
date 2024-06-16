@@ -85,6 +85,7 @@ int main()
 
                 // Reposition "Start Game" text
                 startText.setPosition((event.size.width - startText.getLocalBounds().width) / 2, event.size.height - 200);
+                rulesText.setPosition((event.size.width - startText.getLocalBounds().width) / 2, event.size.height - 100);
             }
 
             if (event.type == sf::Event::MouseButtonPressed && gameStarted && gameResult == MATCH_RESULT_UNKNOWN) {
