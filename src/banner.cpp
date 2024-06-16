@@ -1,25 +1,20 @@
 #include "banner.h"
 
-void adjustStringRowsToCurrentWindowSize(sf::RenderWindow& window, std::string &text, int fontSize){
+void adjustStringRowsToCurrentWindowSize(long unsigned int windowSize, std::string &text, int fontSize){
   //Read string line by line and compare with current window size
-  std::string adjustedText;
   long unsigned int counter = 0;
   for(long unsigned int i = 0; i<text.length(); i++){
-    adjustedText += text[i];
-    if(text[i] != '\n'){
+    if(text.at(i) != '\n'){
       counter++;
-    } else {
+    } else if (text.at(i) == '\n'){
       counter = 0; 
     } 
-    if(counter >= (window.getSize().x / (fontSize / 2))){
+    if(counter >= (windowSize/(fontSize/2))){
       counter = 0;
-      adjustedText += "\n      ";
+      text = text.substr(0, i) + "\n      " + text.substr(i);
     } 
   }
-  text = adjustedText;
 }
-
-
 void displayRules(sf::RenderWindow& window, sf::Font& font) {
     bool firstClickOccured = false;
     std::string rules = R"(
@@ -39,7 +34,7 @@ void displayRules(sf::RenderWindow& window, sf::Font& font) {
 
     sf::Event event;
     while (window.isOpen()) {
-        adjustStringRowsToCurrentWindowSize(window,rules,15);
+        adjustStringRowsToCurrentWindowSize(window.getSize().x,rules,15);
         sf::Text rulesText(rules, font, 15);
         rulesText.setFillColor(sf::Color::Black);
         while (window.pollEvent(event)) {

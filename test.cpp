@@ -4,19 +4,6 @@
 #include "gameMachinery.h"
 #include "banner.h"
 
-class AdjustStringRowsTest : public ::testing::Test {
-protected:
-    void SetUp() override {
-        window.create(sf::VideoMode(800, 600), "Test Window");
-    }
-
-    void TearDown() override {
-        window.close();
-    }
-
-    sf::RenderWindow window;
-};
-
 TEST(DrawMapTest, CorrectOutput) {
     std::vector<std::vector<char>> board = {
         {'X', 'O', 'X'},
@@ -148,21 +135,21 @@ TEST(CheckIfGameFinishedTest, IncorrectBoardValuesTest) {
     EXPECT_EQ(MATCH_RESULT_IMPOSSIBLE, checkIfGameFinished(board, 'O'));
 }
 
-TEST_F(AdjustStringRowsTest, AdjustsStringCorrectly) {
+TEST(AdjustStringRowsTest, AdjustsStringCorrectly) {
     std::string text = "It is a really, really very long string that needs to be adjusted to the width of the window exactly at that  point .";
     
-    adjustStringRowsToCurrentWindowSize(window, text,15);
+    adjustStringRowsToCurrentWindowSize(600, text,15);
 
     // Expected result (for example, splitting the string into multiple lines)
-    std::string expected = "It is a really, really very long string that needs to be adjusted to the width of the window exactly at that  poin\n      t .";
+    std::string expected = "It is a really, really very long string that needs to be adjusted to the width of the\n       window exactly at that  point .";
 
     EXPECT_EQ(text, expected);
 }
 
-TEST_F(AdjustStringRowsTest,  LeaveShortString ) {
+TEST(AdjustStringRowsTest,  LeaveShortString ) {
     std::string text = "It .";
     
-    adjustStringRowsToCurrentWindowSize(window, text,15);
+    adjustStringRowsToCurrentWindowSize(600, text,15);
 
     // Expected result (for example, splitting the string into multiple lines)
     std::string expected = "It .";

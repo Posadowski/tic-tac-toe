@@ -8,6 +8,6 @@
 void displayTicTacToe();
 void displayRules(sf::RenderWindow& window, sf::Font& font);
 
-void adjustStringRowsToCurrentWindowSize(sf::RenderWindow& window, std::string &text, int fontSize);
+void adjustStringRowsToCurrentWindowSize(long unsigned int windowSize, std::string &text, int fontSize);
 
 #endif // BANNER_H
