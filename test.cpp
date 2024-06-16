@@ -159,6 +159,17 @@ TEST_F(AdjustStringRowsTest, AdjustsStringCorrectly) {
     EXPECT_EQ(text, expected);
 }
 
+TEST_F(AdjustStringRowsTest,  LeaveShortString ) {
+    std::string text = "It .";
+    
+    adjustStringRowsToCurrentWindowSize(window, text,15);
+
+    // Expected result (for example, splitting the string into multiple lines)
+    std::string expected = "It .";
+
+    EXPECT_EQ(text, expected);
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
