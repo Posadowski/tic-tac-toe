@@ -120,6 +120,15 @@ int main()
                 drawBoard(window, board, font);
             } else {
                 drawResult(window,font,selectedTeam,gameResult);
+                // reset all
+                std::cout << "here" << std::endl;
+                gameStarted = false;
+                gameResult = MATCH_RESULT_UNKNOWN;
+                board = {
+                    { UNCHECKED_BOX, UNCHECKED_BOX, UNCHECKED_BOX },
+                    { UNCHECKED_BOX, UNCHECKED_BOX, UNCHECKED_BOX },
+                    { UNCHECKED_BOX, UNCHECKED_BOX, UNCHECKED_BOX }
+                };
             }
         }
 
