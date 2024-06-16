@@ -18,7 +18,7 @@ jobs:
     - name: Install g++
       run: |
         sudo apt-get update  
-        sudo apt-get install g++ libgtest-dev libsfml-dev cmake
+        sudo apt-get install g++ libgtest-dev libsfml-dev cmake xvfb
     
     - name: Test
       run: |
