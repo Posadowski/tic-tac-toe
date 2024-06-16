@@ -38,8 +38,14 @@ int main()
     startText.setFillColor(sf::Color::Black);
     startText.setPosition((WINDOW_WIDTH - startText.getLocalBounds().width) / 2, 400);
 
+    // Create "Start Game" text
+    sf::Text rulesText("Rules", font, 50);
+    rulesText.setFillColor(sf::Color::Black);
+    rulesText.setPosition((WINDOW_WIDTH - rulesText.getLocalBounds().width) / 2, 500);
+
     bool gameStarted = false;
-    bool startButtonClicked = false; // New state to handle the start button click
+    bool startButtonClicked = false; // State to handle the start button click
+    bool rulesButtonClicked = false; // State to handle the start button click
 
     // Initial game board
     std::vector<std::vector<char>> board(3, std::vector<char>(3, UNCHECKED_BOX));
@@ -56,11 +62,30 @@ int main()
 
             if (event.type == sf::Event::MouseButtonPressed && !gameStarted) {
                 // Check if the "Start Game" text is clicked
-                sf::FloatRect bounds = startText.getGlobalBounds();
-                if (bounds.contains(event.mouseButton.x, event.mouseButton.y)) {
+                sf::FloatRect startBounds  = startText.getGlobalBounds();
+                if (startBounds .contains(event.mouseButton.x, event.mouseButton.y)) {
                     gameStarted = true;
                     startButtonClicked = true; // Set the flag to ignore the first mouse press after starting the game
                 }
+
+                sf::FloatRect rulesBounds = rulesText.getGlobalBounds();
+                if (rulesBounds.contains(event.mouseButton.x, event.mouseButton.y)) {
+                    rulesButtonClicked = true; // Set the flag to ignore the first mouse press after starting the game
+                }
+            }
+
+            if (event.type == sf::Event::Resized) {
+                // Update the view to the new size of the window
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+
+                // Rescale logo
+                logoSprite.setScale(event.size.width / float(logoTexture.getSize().x), (event.size.height / 2) / float(logoTexture.getSize().y));
+                logoSprite.setPosition(0, 0);
+
+                // Reposition "Start Game" text
+                startText.setPosition((event.size.width - startText.getLocalBounds().width) / 2, event.size.height - 200);
+                rulesText.setPosition((event.size.width - startText.getLocalBounds().width) / 2, event.size.height - 100);
             }
 
             if (event.type == sf::Event::MouseButtonPressed && gameStarted && gameResult == MATCH_RESULT_UNKNOWN) {
@@ -82,13 +107,28 @@ int main()
         window.clear(sf::Color::White);
         
         if (!gameStarted) {
-            window.draw(logoSprite);
-            window.draw(startText);
+            if(!rulesButtonClicked){
+                window.draw(logoSprite);
+                window.draw(startText);
+                window.draw(rulesText);
+            } else {
+                displayRules(window,font);
+                rulesButtonClicked = false;
+            }
         } else {
             if(gameResult == MATCH_RESULT_UNKNOWN){
                 drawBoard(window, board, font);
             } else {
                 drawResult(window,font,selectedTeam,gameResult);
+                // reset all
+                std::cout << "here" << std::endl;
+                gameStarted = false;
+                gameResult = MATCH_RESULT_UNKNOWN;
+                board = {
+                    { UNCHECKED_BOX, UNCHECKED_BOX, UNCHECKED_BOX },
+                    { UNCHECKED_BOX, UNCHECKED_BOX, UNCHECKED_BOX },
+                    { UNCHECKED_BOX, UNCHECKED_BOX, UNCHECKED_BOX }
+                };
             }
         }
 

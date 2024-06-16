@@ -57,13 +57,31 @@ void drawResult(sf::RenderWindow& window,sf::Font& font, char currentPlayer,poss
             break;       
     }
     
-    sf::Text windowText(windowString, font, 50);
-    windowText.setFillColor(sf::Color::Black);
-    // Center the text
-    sf::FloatRect textRect = windowText.getLocalBounds();
-    windowText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
-    windowText.setPosition(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f);
-    window.draw(windowText);
+    bool KeyPressed = false;
+    sf::Event event;
+    while (window.isOpen()) {
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close(); // Close the window properly
+            } else if (event.type == sf::Event::KeyPressed || event.type == sf::Event::MouseButtonPressed) {
+                KeyPressed = true;
+                break;
+            }
+        }
+        if(KeyPressed){
+            break;
+        }
+        // Clear, draw, and display
+        window.clear(sf::Color::White);
+        sf::Text windowText(windowString, font, 50);
+        windowText.setFillColor(sf::Color::Black);
+        // Center the text
+        sf::FloatRect textRect = windowText.getLocalBounds();
+        windowText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+        windowText.setPosition(window.getSize().x / 2.0f, window.getSize().y / 2.0f);
+        window.draw(windowText);
+        window.display();
+    }
 }
 
 bool userSelectedTeamCorrectly(char *userInput)
